@@ -1,0 +1,13 @@
+* {
+  box-sizing: border-box;
+
+}
+
+.App {
+  text-align: center;
+}
+
+.wrapper {
+  width: 100%;
+  margin-top: 150px;
+}

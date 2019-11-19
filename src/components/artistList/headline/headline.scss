@@ -1,0 +1,19 @@
+.path {
+    stroke-dasharray: 320;
+    stroke-dashoffset: 0;
+    stroke: #ff0000;
+    animation: draw 4s linear;
+    fill: #ff0000;
+}
+
+@keyframes draw {
+    from {
+        stroke-dashoffset: 320;
+        fill: transparent;
+    }
+
+    to {
+        stroke-dashoffset: 0;
+        fill: #ff0000;
+    }
+}
