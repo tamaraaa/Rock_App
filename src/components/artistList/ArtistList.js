@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import uniqid from "uniqid";
 
-import ArtistListItem from "./artistListItem/AtristListItem";
+import ListItemCard from "../shared/listItemCard/ListItemCard";
 import Headline from "./headline/Headline";
 
 import { fetchData, fetchAlbums } from "../../redux/actions";
@@ -15,11 +15,13 @@ const ArtistList = ({
   status,
   getAlbums,
   setShowArtist,
-  pageNum
+  pageNum,
+  albums
 }) => {
   useEffect(() => {
     getArtists();
-  }, [getArtists]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <React.Fragment>
@@ -27,12 +29,13 @@ const ArtistList = ({
       <div className="artist-list">
         {status === "success" &&
           artists.map(artist => (
-            <ArtistListItem
+            <ListItemCard
               setShowArtist={setShowArtist}
               artist={artist}
               pageNum={pageNum}
               key={uniqid()}
               fetchAlbums={getAlbums}
+              albums={albums}
             />
           ))}
       </div>

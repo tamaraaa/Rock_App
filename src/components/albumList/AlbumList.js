@@ -5,7 +5,7 @@ import uniqid from "uniqid";
 import { debounce } from "lodash";
 
 import { albumSearch, fetchAlbums, loadMoreAlbums } from "../../redux/actions";
-import AlbumListItem from "./albumListItem/AlbumListItem";
+import ListItemCard from "../shared/listItemCard/ListItemCard";
 
 import "./album_list.scss";
 
@@ -60,11 +60,11 @@ const AlbumList = ({
       <div className="artist-list">
         {status === "success" || status === "pending"
           ? albumsToShow.map(album => (
-              <AlbumListItem
-                name={album.name}
-                img={album.image[2]["#text"]}
+              <ListItemCard
+                album={album}
                 key={uniqid()}
                 songs={album.tracks}
+                albums={albums}
               />
             ))
           : (status = "failure" && <p>{errorMessage}</p>)}
