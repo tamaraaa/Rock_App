@@ -87,7 +87,8 @@
         }
     }
 
-    &__card:hover {
-        transform: rotateY(180deg);
-    }
+}
+
+.artist-list__item:hover .artist-list__item__card {
+    transform: rotateY(180deg);
 }
