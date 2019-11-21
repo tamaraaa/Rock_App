@@ -41,15 +41,57 @@ export const loadMoreAlbums = payload => {
   return { type: actionTypes.SET_SEARCH_VAL, payload };
 };
 
-export const albumSearch = (val, albumList) => {
+export const albumSearch = (val, artist) => {
+  const albumsInfo = [];
+
   return dispatch => {
-    const filtredList = albumList.filter(album =>
-      album.name.toLowerCase().includes(val.toLowerCase())
-    );
-    dispatch({
-      type: actionTypes.ALBUM_SEARCH,
-      payload: filtredList
-    });
+    if (val) {
+      dispatch({ type: actionTypes.FETCH_ALBUMS });
+      axios
+        .get(
+          ` http://ws.audioscrobbler.com/2.0/?method=album.search&album=${val}&api_key=${api.apiKey}&format=json&limit=10`
+        )
+        .then(res => {
+          const albums = res.data.results.albummatches.album;
+
+          if (albums.length > 0) {
+            console.log(albums);
+            albums
+              .filter(album => {
+                return album.artist === artist;
+              })
+              .forEach(album => {
+                axios
+                  .get(
+                    `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${api.apiKey}&artist=${album.artist}&album=${album.name}&format=json&limit=10`
+                  )
+                  .then(res => {
+                    albumsInfo.push(res.data.album);
+                    return albumsInfo;
+                  })
+                  .then(albumsInfo => {
+                    console.log(album);
+                    dispatch({
+                      type: actionTypes.ALBUM_SEARCH,
+                      payload: albumsInfo
+                    });
+                  });
+              });
+          } else {
+            dispatch({
+              type: actionTypes.FETCH_ALBUMS_ERROR,
+              payload: "No results found.."
+            });
+          }
+        })
+
+        .catch(err => {
+          dispatch({
+            type: actionTypes.FETCH_ALBUMS_ERROR,
+            payload: err.message
+          });
+        });
+    }
   };
 };
 

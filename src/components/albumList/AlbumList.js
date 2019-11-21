@@ -18,7 +18,7 @@ const AlbumList = ({
   fetchAlbums,
   pageNum,
   loadMoreAlbums,
-  filtredAlbums,
+  searchedAlbums,
   searchedVal
 }) => {
   const [inputVal, setInputVal] = useState("");
@@ -26,12 +26,16 @@ const AlbumList = ({
   const handleSearch = debounce(inputVal => {
     setInputVal(inputVal);
     loadMoreAlbums(inputVal);
-    albumSearch(inputVal, albums);
+    albumSearch(inputVal, currentArtist);
   }, 1000);
 
-  const albumsToShow = searchedVal.length > 0 ? filtredAlbums : albums;
+  const userSearch = searchedAlbums.length > 0 ? searchedAlbums : "";
+  const albumsToShow = searchedVal.length > 0 ? userSearch : albums;
+
+  console.log("albumiiiiiiiii", albumsToShow, status, searchedAlbums);
 
   const debouncedFetchAlbums = debounce(() => {
+    console.log("effect");
     fetchAlbums(currentArtist, pageNum);
   }, 1000);
 
@@ -47,7 +51,7 @@ const AlbumList = ({
     window.addEventListener("scroll", onScroll, false);
     return () => window.removeEventListener("scroll", onScroll, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentArtist, pageNum, searchedVal, albums]);
+  }, [currentArtist, searchedVal, pageNum]);
 
   return (
     <div className="album-wrapper">
@@ -58,7 +62,7 @@ const AlbumList = ({
         onChange={e => handleSearch(e.target.value)}
       />
       <div className="artist-list">
-        {status === "success" || status === "pending"
+        {albumsToShow.length > 0
           ? albumsToShow.map(album => (
               <ListItemCard
                 album={album}

@@ -6,8 +6,9 @@ const initialState = {
   albums: [],
   currentArtist: "",
   filtredAlbums: [],
-  pageNum: 1,
-  searchedVal: ""
+  pageNum: 0,
+  searchedVal: "",
+  searchedAlbums: []
 };
 
 function rootReducer(state = initialState, action) {
@@ -54,6 +55,7 @@ function rootReducer(state = initialState, action) {
     };
   }
   if (action.type === actionTypes.FETCH_ALBUMS_FULFILLED) {
+    console.log("+1", state.pageNum);
     return {
       ...state,
       albums: [...state.albums, ...action.payload[0]],
@@ -63,14 +65,25 @@ function rootReducer(state = initialState, action) {
       pageNum: state.pageNum + 1
     };
   }
+  // if (action.type === actionTypes.ALBUM_SEARCH) {
+  //   return {
+  //     ...state,
+  //     filtredAlbums: [...action.payload],
+  //     errorMessage: action.payload.length === 0 ? "Album not found.." : "",
+  //     status: action.payload.length === 0 ? "failure" : "success"
+  //   };
+  // }
+
   if (action.type === actionTypes.ALBUM_SEARCH) {
+    console.log(action.payload);
     return {
       ...state,
-      filtredAlbums: [...action.payload],
-      errorMessage: action.payload.length === 0 ? "Album not found.." : "",
-      status: action.payload.length === 0 ? "failure" : "success"
+      searchedAlbums: [...action.payload],
+      errorMessage: "",
+      status: "sucess"
     };
   }
+
   if (action.type === actionTypes.FETCH_ALBUMS_ERROR) {
     return {
       ...state,
