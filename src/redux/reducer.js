@@ -8,7 +8,7 @@ const initialState = {
   albums: [],
   currentArtist: "",
   filtredAlbums: [],
-  pageNum: 1,
+  pageNum: 0,
   searchedVal: "",
   searchedAlbums: []
 };

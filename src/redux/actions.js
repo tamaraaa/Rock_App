@@ -100,6 +100,7 @@ export const albumSearch = (val, artist) => {
 };
 
 export const fetchAlbums = (name, pageNum) => {
+  console.log(pageNum);
   return dispatch => {
     dispatch({ type: actionTypes.FETCH_ALBUMS });
     const albumsInfo = [];
