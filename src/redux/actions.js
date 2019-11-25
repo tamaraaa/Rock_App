@@ -49,7 +49,7 @@ export const albumSearch = (val, artist) => {
       dispatch({ type: actionTypes.FETCH_ALBUMS });
       axios
         .get(
-          ` http://ws.audioscrobbler.com/2.0/?method=album.search&album=${val}&api_key=${api.apiKey}&format=json&limit=100`
+          ` http://ws.audioscrobbler.com/2.0/?method=album.search&album=${val}&api_key=${api.apiKey}&format=json&limit=200`
         )
         .then(res => {
           const albums = res.data.results.albummatches.album;
