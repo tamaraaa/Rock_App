@@ -2,10 +2,15 @@ import React from "react";
 
 import "./header.scss";
 
-const Header = () => {
+const Header = ({ setShowArtist }) => {
   return (
     <div className="header">
-      <span className="header__logo">
+      <span
+        className="header__logo"
+        onClick={() => {
+          setShowArtist(true);
+        }}
+      >
         <em>RockApp</em>
       </span>
     </div>

@@ -5,9 +5,9 @@ import uniqid from "uniqid";
 import { debounce } from "lodash";
 
 import { albumSearch, fetchAlbums, loadMoreAlbums } from "../../redux/actions";
-import ListItemCard from "../shared/listItemCard/ListItemCard";
+import Card from "../shared/card/Card";
 
-import "./album_list.scss";
+import "./albumList.scss";
 
 const AlbumList = ({
   albums,
@@ -27,15 +27,12 @@ const AlbumList = ({
     setInputVal(inputVal);
     loadMoreAlbums(inputVal);
     albumSearch(inputVal, currentArtist);
-  }, 1000);
+  }, 600);
 
   const userSearch = searchedAlbums.length > 0 ? searchedAlbums : "";
   const albumsToShow = searchedVal.length > 0 ? userSearch : albums;
 
-  console.log("albumiiiiiiiii", albumsToShow, status, searchedAlbums);
-
   const debouncedFetchAlbums = debounce(() => {
-    console.log("effect");
     fetchAlbums(currentArtist, pageNum);
   }, 1000);
 
@@ -43,7 +40,8 @@ const AlbumList = ({
     const onScroll = () => {
       if (
         window.innerHeight + window.scrollY >= document.body.offsetHeight &&
-        searchedVal === ""
+        searchedVal === "" &&
+        status === "SUCCESS"
       ) {
         debouncedFetchAlbums();
       }
@@ -58,20 +56,20 @@ const AlbumList = ({
       <input
         className="album-wrapper__input"
         type="text"
-        placeholder="search for the album"
+        placeholder="Search for the album"
         onChange={e => handleSearch(e.target.value)}
       />
       <div className="artist-list">
         {albumsToShow.length > 0
           ? albumsToShow.map(album => (
-              <ListItemCard
+              <Card
                 album={album}
                 key={uniqid()}
                 songs={album.tracks}
-                albums={albums}
+                pageNum={pageNum}
               />
             ))
-          : (status = "failure" && <p>{errorMessage}</p>)}
+          : (status = "FAILURE" && <p>{errorMessage}</p>)}
       </div>
     </div>
   );

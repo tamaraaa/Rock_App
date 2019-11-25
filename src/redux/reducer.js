@@ -1,4 +1,6 @@
 import { actionTypes } from "./constants";
+import { status } from "../constants";
+
 const initialState = {
   artists: [],
   status: "",
@@ -6,7 +8,7 @@ const initialState = {
   albums: [],
   currentArtist: "",
   filtredAlbums: [],
-  pageNum: 0,
+  pageNum: 1,
   searchedVal: "",
   searchedAlbums: []
 };
@@ -16,7 +18,7 @@ function rootReducer(state = initialState, action) {
     return {
       ...state,
       artists: action.payload,
-      status: "success",
+      status: status.SUCCESS,
       errorMessage: ""
     };
   }
@@ -27,10 +29,12 @@ function rootReducer(state = initialState, action) {
     };
   }
 
-  if (action.type === actionTypes.FATCH_ARTISTS) {
+  if (action.type === actionTypes.FETCH_ARTISTS) {
     return {
       ...state,
-      status: "pending"
+      status: status.PENDING,
+      albums: [],
+      pageNum: 1
     };
   }
   if (action.type === actionTypes.SET_STATUS) {
@@ -43,7 +47,7 @@ function rootReducer(state = initialState, action) {
   if (action.type === actionTypes.FETCH_ARTISTS_ERROR) {
     return {
       ...state,
-      status: "failure",
+      status: status.FAILURE,
       errorMessage: action.payload,
       albums: []
     };
@@ -51,43 +55,34 @@ function rootReducer(state = initialState, action) {
   if (action.type === actionTypes.FETCH_ALBUMS) {
     return {
       ...state,
-      status: "pending"
+      status: status.PENDING,
+      searchedAlbums: []
     };
   }
   if (action.type === actionTypes.FETCH_ALBUMS_FULFILLED) {
-    console.log("+1", state.pageNum);
     return {
       ...state,
       albums: [...state.albums, ...action.payload[0]],
-      status: "success",
+      status: status.SUCCESS,
       errorMessage: "",
       currentArtist: action.payload[1],
       pageNum: state.pageNum + 1
     };
   }
-  // if (action.type === actionTypes.ALBUM_SEARCH) {
-  //   return {
-  //     ...state,
-  //     filtredAlbums: [...action.payload],
-  //     errorMessage: action.payload.length === 0 ? "Album not found.." : "",
-  //     status: action.payload.length === 0 ? "failure" : "success"
-  //   };
-  // }
 
   if (action.type === actionTypes.ALBUM_SEARCH) {
-    console.log(action.payload);
     return {
       ...state,
       searchedAlbums: [...action.payload],
       errorMessage: "",
-      status: "sucess"
+      status: status.SUCCESS
     };
   }
 
   if (action.type === actionTypes.FETCH_ALBUMS_ERROR) {
     return {
       ...state,
-      status: "failure",
+      status: status.FAILURE,
       errorMessage: action.payload
     };
   }

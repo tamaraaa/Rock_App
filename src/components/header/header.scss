@@ -1,8 +1,9 @@
 @import '../../scss/variables.scss';
+@import '../../scss/mixins.scss';
 
 .header {
     color: $text-color;
-    background-image: linear-gradient(to right, $main_color, rgb(0, 0, 0), );
+    @include linear-gradient($direction, $main_color, $black);
     display: flex;
     width: 100%;
     height: 80px;
@@ -17,4 +18,7 @@
     box-shadow: 0px -1px 5px 0px rgba(0, 0, 0, 0.75);
     font-style: bold;
 
+    &__logo {
+        cursor: pointer;
+    }
 }

@@ -1,0 +1,42 @@
+@import './scss/variables.scss';
+@import './scss/mixins.scss';
+
+* {
+  box-sizing: border-box;
+}
+
+.App {
+  text-align: center;
+  position: relative;
+}
+
+.wrapper {
+  width: 100%;
+  margin-top: 150px;
+
+  &__btn-top {
+    position: fixed;
+    left: 5%;
+    bottom: 5%;
+    @include linear-gradient($direction, $main_color, $black);
+    width: 50px;
+    height: 50px;
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: opacity 500ms ease;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &:focus {
+      outline: 0;
+    }
+
+    &__icon {
+      width: 30px;
+      height: 30px;
+    }
+  }
+}

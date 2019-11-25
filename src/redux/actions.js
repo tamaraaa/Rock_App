@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import { actionTypes } from "./constants";
-import { api } from "../constants/constantsApi";
+import { api } from "../constants";
 
 export const fetchData = () => {
   return dispatch => {
@@ -49,34 +49,39 @@ export const albumSearch = (val, artist) => {
       dispatch({ type: actionTypes.FETCH_ALBUMS });
       axios
         .get(
-          ` http://ws.audioscrobbler.com/2.0/?method=album.search&album=${val}&api_key=${api.apiKey}&format=json&limit=10`
+          ` http://ws.audioscrobbler.com/2.0/?method=album.search&album=${val}&api_key=${api.apiKey}&format=json&limit=100`
         )
         .then(res => {
           const albums = res.data.results.albummatches.album;
-
           if (albums.length > 0) {
-            console.log(albums);
-            albums
-              .filter(album => {
-                return album.artist === artist;
-              })
-              .forEach(album => {
-                axios
-                  .get(
-                    `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${api.apiKey}&artist=${album.artist}&album=${album.name}&format=json&limit=10`
-                  )
-                  .then(res => {
-                    albumsInfo.push(res.data.album);
-                    return albumsInfo;
-                  })
-                  .then(albumsInfo => {
-                    console.log(album);
-                    dispatch({
-                      type: actionTypes.ALBUM_SEARCH,
-                      payload: albumsInfo
+            const filteredAlbums = albums.filter(album => {
+              return album.artist === artist;
+            });
+            if (filteredAlbums.length > 0) {
+              filteredAlbums.forEach(album => {
+                if (album) {
+                  axios
+                    .get(
+                      `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${api.apiKey}&artist=${album.artist}&album=${album.name}&format=json&limit=10`
+                    )
+                    .then(res => {
+                      albumsInfo.push(res.data.album);
+                      return albumsInfo;
+                    })
+                    .then(albumsInfo => {
+                      dispatch({
+                        type: actionTypes.ALBUM_SEARCH,
+                        payload: albumsInfo
+                      });
                     });
-                  });
+                }
               });
+            } else {
+              dispatch({
+                type: actionTypes.FETCH_ALBUMS_ERROR,
+                payload: "No album matches found.."
+              });
+            }
           } else {
             dispatch({
               type: actionTypes.FETCH_ALBUMS_ERROR,
@@ -84,7 +89,6 @@ export const albumSearch = (val, artist) => {
             });
           }
         })
-
         .catch(err => {
           dispatch({
             type: actionTypes.FETCH_ALBUMS_ERROR,
@@ -112,7 +116,7 @@ export const fetchAlbums = (name, pageNum) => {
             )
             .then(res => {
               albumsInfo.push(res.data.album);
-              if (albumsInfo.length > 9) {
+              if (albumsInfo.length === 10) {
                 dispatch({
                   type: actionTypes.FETCH_ALBUMS_FULFILLED,
                   payload: [albumsInfo, name]

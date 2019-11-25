@@ -1,4 +1,5 @@
 @import '../../../scss/variables.scss';
+@import '../../../scss/mixins.scss';
 
 .artist-list__item {
     width: 320px;
@@ -15,9 +16,7 @@
         transition: all 1s ease-in-out;
         width: 100%;
         margin: 20px 0;
-        -webkit-box-shadow: 0px -1px 5px 0px rgba(0, 0, 0, 0.75);
-        -moz-box-shadow: 0px -1px 5px 0px rgba(0, 0, 0, 0.75);
-        box-shadow: 0px -1px 5px 0px rgba(0, 0, 0, 0.75);
+        box-shadow: 0px -1px 5px 0px $black;
         border-radius: 6px;
         color: $text-color;
 
@@ -42,7 +41,7 @@
 
         &__back {
             backface-visibility: hidden;
-            background-image: linear-gradient(to right, $main_color, rgb(0, 0, 0), );
+            @include linear-gradient($direction, $main_color, $black);
             text-align: center;
             transform: rotateY(180deg);
             height: 100%;
