@@ -8,10 +8,10 @@ export const fetchData = () => {
     dispatch({ type: actionTypes.FETCH_ARTISTS });
     axios
       .get(
-        `${api.rootUrl}?method=artist.getsimilar&artist=AC/DC&api_key=${api.apiKey}&format=json&limit=10`
+        `${api.rootUrl}?method=tag.gettopartists&tag=rock&api_key=${api.apiKey}&format=json&limit=10`
       )
       .then(response => {
-        const artists = response.data.similarartists.artist;
+        const artists = response.data.topartists.artist;
         const artistInfo = [];
         artists.forEach(artist => {
           axios
@@ -49,7 +49,7 @@ export const albumSearch = (val, artist) => {
       dispatch({ type: actionTypes.FETCH_ALBUMS });
       axios
         .get(
-          ` http://ws.audioscrobbler.com/2.0/?method=album.search&album=${val}&api_key=${api.apiKey}&format=json&limit=200`
+          ` http://ws.audioscrobbler.com/2.0/?method=album.search&album=${val}&api_key=${api.apiKey}&format=json&limit=300`
         )
         .then(res => {
           const albums = res.data.results.albummatches.album;
@@ -110,25 +110,28 @@ export const fetchAlbums = (name, pageNum) => {
       .then(res => {
         const albums = res.data.topalbums.album;
         albums.forEach(album => {
-          axios
-            .get(
-              `${api.rootUrl}?method=album.getinfo&api_key=${api.apiKey}&artist=${name}&album=${album.name}&format=json&limit=10`
-            )
-            .then(res => {
-              albumsInfo.push(res.data.album);
-              if (albumsInfo.length === 10) {
+          if (album) {
+            axios
+              .get(
+                `${api.rootUrl}?method=album.getinfo&api_key=${api.apiKey}&artist=${name}&album=${album.name}&format=json&limit=10`
+              )
+              .then(res => {
+                albumsInfo.push(res.data.album);
+                console.log(res.data.album);
+                if (albumsInfo.length === 10) {
+                  dispatch({
+                    type: actionTypes.FETCH_ALBUMS_FULFILLED,
+                    payload: [albumsInfo, name]
+                  });
+                }
+              })
+              .catch(err => {
                 dispatch({
-                  type: actionTypes.FETCH_ALBUMS_FULFILLED,
-                  payload: [albumsInfo, name]
+                  type: actionTypes.FETCH_ALBUMS_ERROR,
+                  payload: err.message
                 });
-              }
-            })
-            .catch(err => {
-              dispatch({
-                type: actionTypes.FETCH_ALBUMS_ERROR,
-                payload: err.message
               });
-            });
+          }
         });
       })
       .catch(err => {

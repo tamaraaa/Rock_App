@@ -61,14 +61,18 @@ const AlbumList = ({
       />
       <div className="artist-list">
         {albumsToShow.length > 0
-          ? albumsToShow.map(album => (
-              <Card
-                album={album}
-                key={uniqid()}
-                songs={album.tracks}
-                pageNum={pageNum}
-              />
-            ))
+          ? albumsToShow.map(album => {
+              if (album) {
+                return (
+                  <Card
+                    album={album}
+                    key={uniqid()}
+                    songs={album.tracks}
+                    pageNum={pageNum}
+                  />
+                );
+              }
+            })
           : (status = "FAILURE" && <p>{errorMessage}</p>)}
       </div>
     </div>
