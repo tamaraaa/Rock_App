@@ -117,7 +117,6 @@ export const fetchAlbums = (name, pageNum) => {
               )
               .then(res => {
                 albumsInfo.push(res.data.album);
-                console.log(res.data.album);
                 if (albumsInfo.length === 10) {
                   dispatch({
                     type: actionTypes.FETCH_ALBUMS_FULFILLED,

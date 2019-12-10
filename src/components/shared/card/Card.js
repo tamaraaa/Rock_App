@@ -12,7 +12,6 @@ const Card = ({
   album,
   showArtist
 }) => {
-  console.log(album);
   const summary = artist ? artist.artist.bio.summary.slice(0, 300) : "";
   const img = artist
     ? artist.artist.image[3]["#text"]
